@@ -1,6 +1,6 @@
-// import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
-import 'package:flutter_webview/webview_page.dart';
+import 'package:flutter_webview/application/application.dart';
+import 'package:flutter_webview/utils/constants.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -10,56 +10,25 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  String wordPath =
-      'https://github.com/nta2005/sample_file/raw/master/FileTest.docx';
-
-  String pptPath =
-      'https://github.com/nta2005/sample_file/raw/master/FileTest.pptx';
-
-  String excelPath =
-      'https://github.com/nta2005/sample_file/raw/master/FileTest.xlsx';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
+          children: listOffice.map((item) {
+            return TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WebViewPage(path: wordPath),
+                    builder: (context) => WebViewPage(path: '$path${item.ext}'),
                   ),
                 );
               },
-              child: const Text('Word'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WebViewPage(path: pptPath),
-                  ),
-                );
-              },
-              child: const Text('PowerPoint'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => WebViewPage(path: excelPath),
-                  ),
-                );
-              },
-              child: const Text('Excel'),
-            ),
-          ],
+              child: Text(item.name),
+            );
+          }).toList(),
         ),
       ),
     );

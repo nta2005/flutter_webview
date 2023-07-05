@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webview/utils/constants.dart';
+import 'package:flutter_webview/application/widgets/loading/loading.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewPage extends StatefulWidget {
@@ -17,7 +19,8 @@ class _WebViewPageState extends State<WebViewPage> {
   void initState() {
     super.initState();
 
-    // #docregion webview_controller
+    Uri url = Uri.parse('$request=${widget.path}');
+
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -26,8 +29,12 @@ class _WebViewPageState extends State<WebViewPage> {
           onProgress: (int progress) {
             // Update loading bar.
           },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
+          onPageStarted: (String url) {
+            Loading.show(context);
+          },
+          onPageFinished: (String url) {
+            Loading.hide(context);
+          },
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
@@ -37,13 +44,15 @@ class _WebViewPageState extends State<WebViewPage> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://view.officeapps.live.com/op/embed.aspx?src=${widget.path}'));
+      ..loadRequest(url);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: WebViewWidget(controller: controller)),
+      body: SafeArea(
+        child: WebViewWidget(controller: controller),
+      ),
     );
   }
 }
